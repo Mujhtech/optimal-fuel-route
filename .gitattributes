@@ -1,0 +1,5 @@
+# Preserve dataset bytes so recorded SHA-256 checksums remain portable.
+*.csv -text whitespace=cr-at-eol
+*.gz -text
+# Keep vendored assets byte-for-byte as published upstream.
+planner/static/planner/leaflet-1.9.4/* -text -whitespace

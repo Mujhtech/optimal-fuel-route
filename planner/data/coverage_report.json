@@ -1,0 +1,371 @@
+{
+  "atp_locations": 2509,
+  "by_state": {
+    "AL": {
+      "located": 50,
+      "stations": 162,
+      "unresolved": 112
+    },
+    "AR": {
+      "located": 49,
+      "stations": 116,
+      "unresolved": 67
+    },
+    "AZ": {
+      "located": 61,
+      "stations": 132,
+      "unresolved": 71
+    },
+    "CA": {
+      "located": 3,
+      "stations": 8,
+      "unresolved": 5
+    },
+    "CO": {
+      "located": 57,
+      "stations": 99,
+      "unresolved": 42
+    },
+    "CT": {
+      "located": 5,
+      "stations": 25,
+      "unresolved": 20
+    },
+    "DE": {
+      "located": 0,
+      "stations": 15,
+      "unresolved": 15
+    },
+    "FL": {
+      "located": 90,
+      "stations": 189,
+      "unresolved": 99
+    },
+    "GA": {
+      "located": 101,
+      "stations": 284,
+      "unresolved": 183
+    },
+    "IA": {
+      "located": 105,
+      "stations": 220,
+      "unresolved": 115
+    },
+    "ID": {
+      "located": 24,
+      "stations": 61,
+      "unresolved": 37
+    },
+    "IL": {
+      "located": 164,
+      "stations": 329,
+      "unresolved": 165
+    },
+    "IN": {
+      "located": 109,
+      "stations": 212,
+      "unresolved": 103
+    },
+    "KS": {
+      "located": 36,
+      "stations": 127,
+      "unresolved": 91
+    },
+    "KY": {
+      "located": 60,
+      "stations": 120,
+      "unresolved": 60
+    },
+    "LA": {
+      "located": 40,
+      "stations": 196,
+      "unresolved": 156
+    },
+    "MA": {
+      "located": 4,
+      "stations": 44,
+      "unresolved": 40
+    },
+    "MD": {
+      "located": 14,
+      "stations": 64,
+      "unresolved": 50
+    },
+    "ME": {
+      "located": 18,
+      "stations": 30,
+      "unresolved": 12
+    },
+    "MI": {
+      "located": 52,
+      "stations": 164,
+      "unresolved": 112
+    },
+    "MN": {
+      "located": 111,
+      "stations": 175,
+      "unresolved": 64
+    },
+    "MO": {
+      "located": 71,
+      "stations": 249,
+      "unresolved": 178
+    },
+    "MS": {
+      "located": 47,
+      "stations": 141,
+      "unresolved": 94
+    },
+    "MT": {
+      "located": 22,
+      "stations": 44,
+      "unresolved": 22
+    },
+    "NC": {
+      "located": 107,
+      "stations": 195,
+      "unresolved": 88
+    },
+    "ND": {
+      "located": 19,
+      "stations": 59,
+      "unresolved": 40
+    },
+    "NE": {
+      "located": 25,
+      "stations": 111,
+      "unresolved": 86
+    },
+    "NH": {
+      "located": 7,
+      "stations": 23,
+      "unresolved": 16
+    },
+    "NJ": {
+      "located": 18,
+      "stations": 112,
+      "unresolved": 94
+    },
+    "NM": {
+      "located": 54,
+      "stations": 107,
+      "unresolved": 53
+    },
+    "NV": {
+      "located": 31,
+      "stations": 71,
+      "unresolved": 40
+    },
+    "NY": {
+      "located": 30,
+      "stations": 113,
+      "unresolved": 83
+    },
+    "OH": {
+      "located": 135,
+      "stations": 262,
+      "unresolved": 127
+    },
+    "OK": {
+      "located": 75,
+      "stations": 182,
+      "unresolved": 107
+    },
+    "OR": {
+      "located": 18,
+      "stations": 29,
+      "unresolved": 11
+    },
+    "PA": {
+      "located": 92,
+      "stations": 217,
+      "unresolved": 125
+    },
+    "RI": {
+      "located": 1,
+      "stations": 2,
+      "unresolved": 1
+    },
+    "SC": {
+      "located": 91,
+      "stations": 181,
+      "unresolved": 90
+    },
+    "SD": {
+      "located": 19,
+      "stations": 62,
+      "unresolved": 43
+    },
+    "TN": {
+      "located": 91,
+      "stations": 162,
+      "unresolved": 71
+    },
+    "TX": {
+      "located": 248,
+      "stations": 776,
+      "unresolved": 528
+    },
+    "UT": {
+      "located": 60,
+      "stations": 93,
+      "unresolved": 33
+    },
+    "VA": {
+      "located": 57,
+      "stations": 198,
+      "unresolved": 141
+    },
+    "VT": {
+      "located": 1,
+      "stations": 16,
+      "unresolved": 15
+    },
+    "WA": {
+      "located": 23,
+      "stations": 52,
+      "unresolved": 29
+    },
+    "WI": {
+      "located": 213,
+      "stations": 295,
+      "unresolved": 82
+    },
+    "WV": {
+      "located": 12,
+      "stations": 38,
+      "unresolved": 26
+    },
+    "WY": {
+      "located": 24,
+      "stations": 64,
+      "unresolved": 40
+    }
+  },
+  "coordinate_file_sha256": "781a227bef3887000bec6b340f883dbc733f32eee60c5dccdbb940e7a8cbfecc",
+  "coverage_percent": 41.41,
+  "located_stations": 2744,
+  "osm_locations": 235,
+  "osm_spatial_supplement_locations": 17,
+  "prepared_on": "2026-10-28",
+  "price_file_sha256": "c704371f141ded9c54df6c32d488a0ba2ceb589f88c936c967daa5330e0cd241",
+  "sources": [
+    [
+      "optimal-fuel-allsups_yesway_us.geojson",
+      425,
+      "a1e3c99f1bb07ff40f15f28891f796894fb9f43c19640631ae8e0ee3bdc1e1fe"
+    ],
+    [
+      "optimal-fuel-caseys_general_store_us.geojson",
+      3750,
+      "6052c47c2df740e60475b1a015fdbf57fd970c3504969e31cfb9629444800101"
+    ],
+    [
+      "optimal-fuel-cefco_us.geojson",
+      135,
+      "fb325f6fc1960220033a95406d1c8fcdac7506ec7587a1f2d33b2cd4a34b5df5"
+    ],
+    [
+      "optimal-fuel-cenex.geojson",
+      1531,
+      "4cb1f4061884431d5a24492ac4fd3c21c1721ca9e30cbfa4fdad1b5ffde48df8"
+    ],
+    [
+      "optimal-fuel-chevron_us.geojson",
+      16636,
+      "33315b7b360e447e5c74d28fd1ec479e0e697b56f84743e171ea64dcc3715eda"
+    ],
+    [
+      "optimal-fuel-circle_k.geojson",
+      6048,
+      "dcac24d34f9786669b0e4da44e07b08bbc08c752bcda69e52fd12b1efd3d03af"
+    ],
+    [
+      "optimal-fuel-kwik_trip.geojson",
+      920,
+      "86a2484d2be47caa3f1e467f4a64782bfc554373fe261b007d0e622ee80433bf"
+    ],
+    [
+      "optimal-fuel-loves_us.geojson",
+      734,
+      "10848e299766942c550e9c0d0a797a787062f75d56c4c6e88c7e3ddb5fc83d21"
+    ],
+    [
+      "optimal-fuel-marathon_petroleum_us.geojson",
+      7705,
+      "b3c3bd7aa31630b4181ba643286e56e061711c0d8550045c0625c4d0ad7eaa0a"
+    ],
+    [
+      "optimal-fuel-maverik.geojson",
+      844,
+      "f744a49a41a50312af53a71ec2def4ab653cf2103b72827b5028651d9aaf9487"
+    ],
+    [
+      "optimal-fuel-phillips_66_conoco_76.geojson",
+      6008,
+      "6b002ab723c7e0f51993cc7cf045e1f1fff7a93372b32414c7e526e92e63d4db"
+    ],
+    [
+      "optimal-fuel-pilot.geojson",
+      720,
+      "782faee81ea2b119a33bc4d9e24f74af59ee9160cc063a6a0b90dd0430d0f765"
+    ],
+    [
+      "optimal-fuel-quiktrip_us.geojson",
+      1265,
+      "222e23f8bb8ca23a4a589d42a1cd5ecca60fc5971b6cc6c6c22873b619a453df"
+    ],
+    [
+      "optimal-fuel-road_ranger_us.geojson",
+      55,
+      "cdff5da40c9c4c5e7f0bc7ae8ed21f95e537a7fc7b8a92f27e64f8d41c6d64d6"
+    ],
+    [
+      "optimal-fuel-rutters_us.geojson",
+      94,
+      "050b05de1b03a1bcd74e6f9e6b35abb0abb209ad6d2214ec9e0b4b5ecdcb381a"
+    ],
+    [
+      "optimal-fuel-sheetz.geojson",
+      865,
+      "afad8a0a753e988730f37575e0ea907991f22947d0b70e883d93ef5bf7d8566e"
+    ],
+    [
+      "optimal-fuel-shell.geojson",
+      50192,
+      "f6e4888e056a9def93865753d3c455c65999dac3de5c36298586ec519c8b1597"
+    ],
+    [
+      "optimal-fuel-sinclair_us.geojson",
+      1875,
+      "10d9e81f077c6e4545d02eaab69e1b915b0a848211df2713e702651d7221b3b0"
+    ],
+    [
+      "optimal-fuel-speedway_us.geojson",
+      2866,
+      "df1bdc82a9a42d0eb74e9434fd656d3be078181f01e3f9b6e2d547519403de13"
+    ],
+    [
+      "optimal-fuel-sunoco_us.geojson",
+      5490,
+      "62b2078b3be90b0c28283b47f32330bfa6edda8d92c91b7b351281d1dc500cc7"
+    ],
+    [
+      "optimal-fuel-thorntons_us.geojson",
+      220,
+      "3b8d96aaf26040adf3f7fc9561710bd83249d91243d99669aee4cf1534e3687c"
+    ],
+    [
+      "optimal-fuel-travelcenters_of_america_us.geojson",
+      365,
+      "89c70be21ae09b086da22f8fbe036b9a3c753e76c161d495d8de19548e2c7092"
+    ],
+    [
+      "optimal-fuel-valero.geojson",
+      4259,
+      "4f5b196b12e58497532eab047b235bba0b70411fb2b0e1cd1eb6ab7826e7b34c"
+    ]
+  ],
+  "total_stations": 6626,
+  "unresolved_stations": 3882
+}

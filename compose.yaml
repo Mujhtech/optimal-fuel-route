@@ -1,0 +1,20 @@
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-local-development-only-change-before-public-deployment}
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1}
+      DJANGO_DEBUG: ${DJANGO_DEBUG:-false}
+      OSRM_BASE_URL: ${OSRM_BASE_URL:-https://router.project-osrm.org}
+      GEOCODING_BASE_URL: ${GEOCODING_BASE_URL:-https://photon.komoot.io}
+      PROVIDER_USER_AGENT: ${PROVIDER_USER_AGENT:-OptimalFuelPlanner/1.0 (route planning assignment)}
+      PROVIDER_TIMEOUT_SECONDS: ${PROVIDER_TIMEOUT_SECONDS:-15}
+      STATION_CORRIDOR_MILES: ${STATION_CORRIDOR_MILES:-1}
+      MAX_ROUTE_SNAP_METERS: ${MAX_ROUTE_SNAP_METERS:-1000}
+      MAX_STATION_SNAP_MILES: ${MAX_STATION_SNAP_MILES:-0.25}
+    volumes:
+      - fuel-data:/data
+volumes:
+  fuel-data:

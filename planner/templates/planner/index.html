@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Optimal Fuel API</title>
+<style>body{font:17px/1.6 system-ui;max-width:780px;padding:48px 24px;margin:auto;color:#183332;background:#f5f8f6}h1{font-size:38px;line-height:1.15}code,pre{font-size:14px}pre{background:#e4ece7;padding:20px;overflow:auto;border-radius:12px}a{color:#126b48}input,button{font:inherit;padding:10px;border:1px solid #b6c8bd;border-radius:6px}label{display:block;margin:16px 0}input{display:block;width:90%}button{background:#126b48;color:white;cursor:pointer}#error{color:#9d2e22}small{color:#51625a}</style></head>
+<body><small>USA ROUTE PLANNING · 500 MILE RANGE · 10 MPG</small><h1>Find a cheaper place<br>to fill up along your route.</h1>
+<p>This Django API returns a driving route, fuel purchases, total cost, GeoJSON, and an interactive map. <a href="/api/schema/">OpenAPI specification</a> · <a href="/health/">Data status</a></p>
+<form id="planner"><label>Start<input id="start" value="Chicago, IL" required maxlength="300"></label><label>Finish<input id="finish" value="New York, NY" required maxlength="300"></label><button id="submit">Plan route</button></form><p id="error" role="status" aria-live="polite"></p>
+<p><small>The vehicle starts with 50 gallons. Total cost values the fuel consumed, including starting fuel. Its price uses the nearest listed station quote unless you send <code>initial_fuel_price_per_gallon</code>. Purchases along the route are reported separately.</small></p>
+<pre>POST /api/route/
+Content-Type: application/json
+
+{
+  "start": {"latitude": 41.8781, "longitude": -87.6298},
+  "finish": {"latitude": 40.7128, "longitude": -74.0060}
+}</pre>
+<script>document.getElementById('planner').addEventListener('submit',async(event)=>{event.preventDefault();const button=document.getElementById('submit');const message=document.getElementById('error');button.disabled=true;button.textContent='Planning…';message.textContent='';try{const response=await fetch('/api/route/',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({start:document.getElementById('start').value,finish:document.getElementById('finish').value})});const plan=await response.json();if(!response.ok)throw new Error(plan.error.message);window.location.assign(plan.map_url);}catch(error){message.textContent=error.message;}finally{button.disabled=false;button.textContent='Plan route';}});</script>
+</body></html>

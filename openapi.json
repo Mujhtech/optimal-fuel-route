@@ -1,0 +1,599 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Optimal Fuel Route API",
+    "version": "2.0.0",
+    "description": "USA driving routes, verified fuel itineraries and trip fuel-consumption cost. Fixed 500-mile range, 10 MPG, 50-gallon tank. Starts full unless overridden. Unknown starting-fuel price uses a clearly labelled nearest-listed-station quote. At most three routing calls; place names can add two separate geocoding calls. Geometry appears once in map.features. Cached repeats make no external calls."
+  },
+  "paths": {
+    "/api/route/": {
+      "post": {
+        "operationId": "planRoute",
+        "summary": "Plan a route and fuel purchases",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RouteRequest"
+              },
+              "example": {
+                "start": {
+                  "latitude": 41.8781,
+                  "longitude": -87.6298
+                },
+                "finish": {
+                  "latitude": 40.7128,
+                  "longitude": -74.006
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Route, fuel purchases, cost in USD, GeoJSON map, and map URL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoutePlan"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidRequest"
+          },
+          "413": {
+            "description": "Request exceeds 16 KB"
+          },
+          "415": {
+            "description": "Content-Type must be application/json"
+          },
+          "422": {
+            "description": "No route, insufficient station coverage, or an unreachable fuel stop",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Invalid or unavailable upstream service"
+          },
+          "503": {
+            "description": "Missing coordinates or starting-fuel benchmark, provider congestion or unavailable database"
+          },
+          "504": {
+            "description": "Upstream timeout"
+          }
+        }
+      }
+    },
+    "/api/plans/{plan_id}/map/": {
+      "get": {
+        "operationId": "viewMap",
+        "summary": "Interactive Leaflet route map",
+        "parameters": [
+          {
+            "name": "plan_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "HTML map with route and fuel stops"
+          },
+          "404": {
+            "description": "Unknown or expired plan"
+          }
+        }
+      }
+    },
+    "/health/": {
+      "get": {
+        "operationId": "health",
+        "responses": {
+          "200": {
+            "description": "Database status and station counts"
+          },
+          "503": {
+            "description": "Database unavailable"
+          }
+        }
+      }
+    },
+    "/api/schema/": {
+      "get": {
+        "operationId": "schema",
+        "responses": {
+          "200": {
+            "description": "This OpenAPI document"
+          }
+        }
+      }
+    },
+    "/api/coverage/": {
+      "get": {
+        "operationId": "stationCoverage",
+        "summary": "Report verified coordinate coverage and excluded stations",
+        "responses": {
+          "200": {
+            "description": "Station counts and coordinate coverage",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Coverage"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Database unavailable"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "InvalidRequest": {
+        "description": "Invalid JSON, input fields, or location outside the USA",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Coordinates": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "latitude",
+          "longitude"
+        ],
+        "properties": {
+          "latitude": {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90
+          },
+          "longitude": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180
+          }
+        }
+      },
+      "Location": {
+        "oneOf": [
+          {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300,
+            "examples": [
+              "Chicago, IL"
+            ]
+          },
+          {
+            "$ref": "#/components/schemas/Coordinates"
+          }
+        ]
+      },
+      "RouteRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "start",
+          "finish"
+        ],
+        "properties": {
+          "start": {
+            "$ref": "#/components/schemas/Location"
+          },
+          "finish": {
+            "$ref": "#/components/schemas/Location"
+          },
+          "initial_fuel_gallons": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 50,
+            "default": 50
+          },
+          "initial_fuel_price_per_gallon": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0.001,
+            "maximum": 100,
+            "description": "Known price per US gallon of starting inventory. Only consumed initial gallons are charged. If omitted, the nearest located station quote supplies an explicitly labelled estimate."
+          }
+        }
+      },
+      "RoutePlan": {
+        "type": "object",
+        "required": [
+          "plan_id",
+          "route",
+          "fuel_stops",
+          "total_cost_usd",
+          "fuel",
+          "map",
+          "map_url",
+          "metadata",
+          "fuel_purchases_cost_usd"
+        ],
+        "properties": {
+          "plan_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "route": {
+            "$ref": "#/components/schemas/RouteSummary"
+          },
+          "fuel_stops": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FuelStop"
+            }
+          },
+          "total_cost_usd": {
+            "type": "string",
+            "pattern": "^[0-9]+\\.[0-9]{2}$",
+            "description": "FIFO value of fuel consumed: consumed starting inventory plus consumed route purchases. Does not charge unused starting fuel."
+          },
+          "fuel": {
+            "$ref": "#/components/schemas/FuelSummary"
+          },
+          "map": {
+            "$ref": "#/components/schemas/FeatureCollection"
+          },
+          "map_url": {
+            "type": "string",
+            "description": "Relative interactive map URL, valid up to 24 hours"
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "currency": {
+                "const": "USD"
+              },
+              "result_cache_hit": {
+                "type": "boolean"
+              },
+              "routing_api_calls": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 3
+              },
+              "geocoding_api_calls": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2
+              },
+              "route_recovered": {
+                "type": "boolean"
+              },
+              "unused_waypoints_removed": {
+                "type": "boolean"
+              },
+              "candidate_station_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "station_coverage": {
+                "$ref": "#/components/schemas/Coverage"
+              },
+              "station_corridor_miles": {
+                "type": "number"
+              },
+              "optimization": {
+                "type": "string"
+              },
+              "cost_basis": {
+                "type": "string"
+              },
+              "warnings": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "map_expires_in_seconds": {
+                "type": "integer"
+              },
+              "attribution": {
+                "type": "string"
+              }
+            }
+          },
+          "fuel_purchases_cost_usd": {
+            "type": "string",
+            "pattern": "^[0-9]+\\.[0-9]{2}$",
+            "description": "Planned cash purchases at en-route stations; excludes pre-existing starting inventory."
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "type": "object",
+            "required": [
+              "code",
+              "message"
+            ],
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "details": {
+                "type": "object"
+              }
+            }
+          }
+        }
+      },
+      "RouteSummary": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "distance_miles",
+          "duration_seconds"
+        ],
+        "properties": {
+          "distance_miles": {
+            "type": "number",
+            "minimum": 0
+          },
+          "duration_seconds": {
+            "type": "number",
+            "minimum": 0
+          }
+        }
+      },
+      "FuelStop": {
+        "type": "object",
+        "required": [
+          "number",
+          "station_id",
+          "name",
+          "latitude",
+          "longitude",
+          "mile_marker",
+          "price_per_gallon_usd",
+          "gallons_purchased",
+          "cost_usd",
+          "arrival_fuel_gallons",
+          "departure_fuel_gallons"
+        ],
+        "properties": {
+          "number": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "station_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "location_source": {
+            "type": "string"
+          },
+          "mile_marker": {
+            "type": "number",
+            "minimum": 0
+          },
+          "price_per_gallon_usd": {
+            "type": "string"
+          },
+          "gallons_purchased": {
+            "type": "number",
+            "minimum": 0
+          },
+          "cost_usd": {
+            "type": "string",
+            "pattern": "^[0-9]+\\.[0-9]{2}$"
+          },
+          "arrival_fuel_gallons": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 50
+          },
+          "departure_fuel_gallons": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 50
+          }
+        }
+      },
+      "FuelSummary": {
+        "type": "object",
+        "properties": {
+          "mpg": {
+            "const": 10
+          },
+          "maximum_range_miles": {
+            "const": 500
+          },
+          "tank_capacity_gallons": {
+            "const": 50
+          },
+          "initial_gallons": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 50
+          },
+          "purchased_gallons": {
+            "type": "number",
+            "minimum": 0
+          },
+          "consumed_gallons": {
+            "type": "number",
+            "minimum": 0
+          },
+          "remaining_gallons": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 50
+          },
+          "initial_fuel_consumed_gallons": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 50
+          },
+          "initial_fuel_consumed_cost_usd": {
+            "type": "string",
+            "pattern": "^[0-9]+\\.[0-9]{2}$"
+          },
+          "en_route_consumed_cost_usd": {
+            "type": "string",
+            "pattern": "^[0-9]+\\.[0-9]{2}$"
+          },
+          "initial_fuel_price_per_gallon_usd": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Exact decimal USD price per US gallon."
+          },
+          "initial_price_source": {
+            "enum": [
+              "user_supplied",
+              "nearest_listed_station",
+              "not_needed"
+            ]
+          },
+          "initial_price_is_estimate": {
+            "type": "boolean"
+          },
+          "initial_price_station_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "initial_price_distance_miles": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0
+          }
+        }
+      },
+      "Coverage": {
+        "type": "object",
+        "required": [
+          "total_us_stations",
+          "located_stations",
+          "unlocated_stations",
+          "located_percent"
+        ],
+        "properties": {
+          "total_us_stations": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "located_stations": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "unlocated_stations": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "located_percent": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+          }
+        }
+      },
+      "FeatureCollection": {
+        "type": "object",
+        "required": [
+          "type",
+          "features"
+        ],
+        "properties": {
+          "type": {
+            "const": "FeatureCollection"
+          },
+          "features": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "type",
+                "geometry",
+                "properties"
+              ],
+              "properties": {
+                "type": {
+                  "const": "Feature"
+                },
+                "geometry": {
+                  "type": "object",
+                  "required": [
+                    "type",
+                    "coordinates"
+                  ],
+                  "properties": {
+                    "type": {
+                      "enum": [
+                        "LineString",
+                        "Point"
+                      ]
+                    },
+                    "coordinates": {
+                      "type": "array"
+                    }
+                  }
+                },
+                "properties": {
+                  "type": "object",
+                  "description": "kind=route/start/finish/fuel_stop; fuel markers reference fuel_stops by number and station_id."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
